@@ -42,6 +42,7 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         // 配列画像（１番目）を表示
         imageView.image = imageArray[imageIndex]
+       
     }
     // selectorの因数をとるメソッド
     @objc func onTimer(_ timer:Timer) {
@@ -66,12 +67,14 @@ class ViewController: UIViewController {
     // 再生/停止ボタンのアクション
     @IBAction func goAndStopButton(_ sender: Any) {
         if self.timer == nil {
-            self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(onTimer(_:)), userInfo: nil, repeats: true)
+            goAndStopButton.setTitle("停止", for: .normal)
+            self.timer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(onTimer(_:)), userInfo: nil, repeats: true)
             
             //  ボタンの無効化
             nextButton.isEnabled = false
             backButton.isEnabled = false
         } else {
+            goAndStopButton.setTitle("再生", for: .normal)
             self.timer.invalidate() //タイマー停止
             self.timer = nil
             
@@ -98,10 +101,19 @@ class ViewController: UIViewController {
     }
     
     // 画像をタップした時に呼ばれる処理
-    
    
     @IBAction func tappedImageView(_ sender: Any) {
         performSegue(withIdentifier: "toNext", sender: nil)
+        if self.timer != nil {
+            self.timer.invalidate()
+            self.timer = nil
+            goAndStopButton.setTitle("再生", for: .normal)
+            
+            nextButton.isEnabled = true
+            backButton.isEnabled = true
+            
+        }
+        
     }
     
     // 画像をタップした時に拡大表示されるview（NextViewController）へ画面遷移する
